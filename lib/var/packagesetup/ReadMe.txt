@@ -1,10 +1,15 @@
-Multilevel Escalation mail
-=============================
+Multilevel Escalation mail from Customer to Agent
+===================================================
+<rohitbasu@cpan.org>
+NB: Please download the Zip file to have access of the xml and dtl file.
+The Zip cantains a OPM file(Bundel for OTRS), which is tested in Ubuntu OS.
 
-
+1	System
+===============
 
 1.1	System Environment
 OTRS is perl based web framework for HelpDesk and IT Service Management. It runs on linux/unix based system on commodity hardware.
+
 1.2	Requirement References
 New work flow development for Multi level escalation of ticket.
 New Interface for Escalation Notification Configuration.
@@ -26,33 +31,46 @@ Another feature is the customization of the multilevel escalation template by de
 
 1.4	Definitions, Acronyms and Abbreviations
 NotifyI, NotifyII, NotifyIII are the three level of Escalation, of which NotifyI is the lowest level and NotifyIII is the highest one
+
 1.5	Design Constraints
 There is no such design constrains, A new escalation table is implemented in the database to make this project very independent.
+
 1.6	Assumptions
 1.6.1            Reusable Components/COTS identified
 Two new modules (Escalation.pm and AdminESCL.pm) are developed which can be reused for different other purposes.
+
 1.7	Dependencies
 		The new modules developed have dependencies with SLA.pm, the OTRS framework module
+
 1.8	System Environment
-1) Determination of Integration Sequence
+A) Determination of Integration Sequence
 Databse table should be integrated first then the package for both the new module should be implemented, then the pl file should be implemented as cron job
-2) Integration Environment
+B) Integration Environment
 OTRS 3.0 Frameworkor above.
-3) Integration Procedure and Criteria
+C) Integration Procedure and Criteria
 use command:
-1. cd /opt/otrs
-2. find `perl -e 'print "@INC"'` -name '*.pm' -print | tee ~/Perl-OTRS-modules-installed.txt
-                                          3. cat Perl-OTRS-modules-installed.txt | grep “Escalation.pm”
-  should be under /opt/otrs/Kernel/System/
-                              	4. cat Perl-OTRS-modules-installed.txt | grep “AdminESCL.pm”
-  should be under /opt/otrs/Kernel/Module/
+I.   cd /opt/otrs
+II.  find `perl -e 'print "@INC"'` -name '*.pm' -print | tee ~/Perl-OTRS-modules-installed.txt
+III. cat Perl-OTRS-modules-installed.txt | grep “Escalation.pm”
+     should be under /opt/otrs/Kernel/System/
+IV.  cat Perl-OTRS-modules-installed.txt | grep “AdminESCL.pm”
+     should be under /opt/otrs/Kernel/Module/
+
+
 2	External Interfaces
+===============================
+
 2.1	External Interfaces Provided
 External interfaces for admin is provided by OTRS framework, An addition for Escalation is there in Escalation.xml file. (A new entry under group Ticket and subgroup 'Frontend::Admin::ModuleRegistration' is made.
 Path= /opt/otrs/Kernel/Config/File/Escalation.xml
+
 2.2	External Interfaces Used
 For AdminESCL.pm execution a new dtl file is introduced named  AdminESCL.dlt under the path '/opt/otrs/Kernel/Output/HTML/Standard/'
+
+
 3	Use Cases 
+=========================
+
 3.1	Creating Escalation Matrix for different level of user on a particular ticket on different set of SLA:
 3.1.1	Description
 Here the SLA is directly proportional to Priority. For each Priority a defined SLA was already there. Now for each SLA three different type of timing is given i.e. FirstResponse Time, UdpateTime, Solution Time. Now for each type of timing we need to develop three level of notification according to the level of user.
@@ -70,15 +88,19 @@ If and when required the administrator can edit the Escalation Matrix to do the 
 3.2.2	Flow of Events
 A. Administrator can edit the Escalation Matrix any time.
 
+
 4	Detailed Design
-		1. File Path at a glance after Instalation
-				<File Permission="644" Location="Kernel/Config/Files/Escalation.xml" Encode="Base64"></File>
-				<File Permission="644" Location="Kernel/Modules/AdminESCL.pm" Encode="Base64"></File>
-				<File Permission="664" Location="Kernel/System/Escalation.pm" Encode="Base64"></File>
-				<File Permission="644" Location="Kernel/Output/HTML/Standard/AdminESCL.dtl" Encode="Base64"></File>
-				<File Permission="755" Location="bin/otrs.Escalation.pl" Encode="Base64"></File>
-				<File Permission="644" Location="var/packagesetup/MultilevelEscalation.pm" Encode="Base64"></File>
-2. A new table is introduced in the database
+=============================
+
+4.1 File Path at a glance after Instalation
+	<File Permission="644" Location="Kernel/Config/Files/Escalation.xml" Encode="Base64"></File>
+	<File Permission="644" Location="Kernel/Modules/AdminESCL.pm" Encode="Base64"></File>
+	<File Permission="664" Location="Kernel/System/Escalation.pm" Encode="Base64"></File>
+	<File Permission="644" Location="Kernel/Output/HTML/Standard/AdminESCL.dtl" Encode="Base64"></File>
+	<File Permission="755" Location="bin/otrs.Escalation.pl" Encode="Base64"></File>
+	<File Permission="644" Location="var/packagesetup/MultilevelEscalation.pm" Encode="Base64"></File>
+
+4.2 A new table is introduced in the database
 CREATE TABLE escalation (
     sla_id INTEGER NOT NULL,
     notify_type VARCHAR (3) NOT NULL,
@@ -88,34 +110,47 @@ CREATE TABLE escalation (
     valid_id SMALLINT NOT NULL,
     PRIMARY KEY(sla_id,notify_type,level)
     );
-3. Add new constrain in the database
+
+4.3 Add new constrain in the database
 ALTER TABLE escalation ADD CONSTRAINT FK_escalation_sla_id_id FOREIGN KEY (sla_id) REFERENCES sla (id) ON DELETE CASCADE ON UPDATE CASCADE;
-4. Two pm files need to be installed:
+
+4.4 Two pm files need to be installed:
 The webframe module in /opt/otrs/Kernel/Module/AdminESCL.pm to support GUI
 The system core module in /opt/otrs/Kernel/System/Escalation.pm to support DB
-5. A new dtl file in /opt/otrs/Kernel/Output/HTML/Standard/AdminESCL.dtl
-6. Edition in /opt/otrs/Kernel/Config/File/Escalation.xml
-7. Lastly the Apache need to be restarted.
-8. Lastly a cron job CronESCL.pl need to be run 
+
+4.5 A new dtl file in /opt/otrs/Kernel/Output/HTML/Standard/AdminESCL.dtl
+
+4.6 Edition in /opt/otrs/Kernel/Config/File/Escalation.xml
+
+4.7 Lastly the Apache need to be restarted.
+
+4.8 Lastly a cron job CronESCL.pl need to be run 
+
 
 5.	Software Detailed Design
-  5.1.	Creating Escalation Matrix for different level of user on a particular ticket on different set of SLA.
+====================================
+
+5.1.	Creating Escalation Matrix for different level of user on a particular ticket on different set of SLA.
 Pseudo code:
 ?	Administrator click the Escalation Matrix under the Admin tab.
 ?	Select the SLA for which the matrix need to be entered.
 ?	The module helps to select the Notify type and the corresponding Notify level.
 ?	When save the module checks the validity and entered in the database table.
-  5.2.	Edit of the Escalation Matrix.
-	Pseudo code:
+
+5.2.	Edit of the Escalation Matrix.
+Pseudo code:
 ?	Administrator click the Escalation Matrix under the Admin tab.
 ?	Select the SLA for which the matrix need to be edited.
 ?	The module helps to fetch valid record from the database and show in the GUI.
 ?	Edition of any file need to be validated by the module and saved in the database table.
 ?	Invalid record will be clear from the table if tried to be entered
+
+
 6.	Responsibilities
+==============================
+
 A. Administrator is responsible for adding escalation matrix for different level. 
 B. Administrator opens, enter and save valid entry.
-		C. Administrator can edit the Escalation matrix when required.
-                                          D. Administrator can change the level of notification by minor change in pm and dtl file.
-		E. The cron job need to be restart
-
+C. Administrator can edit the Escalation matrix when required.
+D. Administrator can change the level of notification by minor change in pm and dtl file.
+E. The cron job need to be restart

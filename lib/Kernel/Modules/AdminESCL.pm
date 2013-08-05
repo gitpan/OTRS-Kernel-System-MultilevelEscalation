@@ -996,6 +996,11 @@ from var/packagesetup/MultilevelEscalation-1.0.1 and get installed as bundel in 
 =head2 VERSION
 
 $Revision: 1.0 $ $Date: 2013/02/04 14:38:57 $
+$VERSION = qw($Revision: 1.0 $) [1];
+
+=head2 Dependencies
+
+Kernel::System::Escalation
 
 =head2 SYNOPSIS
 
@@ -1005,51 +1010,49 @@ Helps to create the OTRS interface for the Multilevel escalation.
 
 create an object
 
-
-use warnings;
-
-use File::Basename;
-use FindBin qw($RealBin);
-use lib dirname($RealBin);
-
-use Kernel::Config;
-use Kernel::System::Encode;
-use Kernel::System::Log;
-use Kernel::System::Time;
-use Kernel::System::DB;
-use Kernel::System::Main;
-use Kernel::System::Ticket;
-use Kernel::System::Queue;
-use Kernel::System::Group;
-use Kernel::System::SLA;
-use Kernel::System::Email;
-use  Kernel::System::User;
-use Kernel::System::Escalation;
+	use warnings;
+	use File::Basename;
+	use FindBin qw($RealBin);
+	use lib dirname($RealBin);
+	use Kernel::Config;
+	use Kernel::System::Encode;
+	use Kernel::System::Log;
+	use Kernel::System::Time;
+	use Kernel::System::DB;
+	use Kernel::System::Main;
+	use Kernel::System::Ticket;
+	use Kernel::System::Queue;
+	use Kernel::System::Group;
+	use Kernel::System::SLA;
+	use Kernel::System::Email;
+	use  Kernel::System::User;
+	use Kernel::System::Escalation;
 
 
-my %CommonObject = ();
-$CommonObject{ConfigObject} = Kernel::Config->new();
-$CommonObject{EncodeObject} = Kernel::System::Encode->new(%CommonObject);
-$CommonObject{LogObject}    = Kernel::System::Log->new(
-    LogPrefix => 'OTRS-otrs.EscalationMatrix.pl',
-    %CommonObject,
-);
-$CommonObject{MainObject}   = Kernel::System::Main->new(%CommonObject);
-$CommonObject{TimeObject}   = Kernel::System::Time->new(%CommonObject);
-$CommonObject{DBObject}     = Kernel::System::DB->new(%CommonObject);
-$CommonObject{TicketObject} = Kernel::System::Ticket->new(%CommonObject);
-$CommonObject{QueueObject}  = Kernel::System::Queue->new(%CommonObject);
-$CommonObject{GroupObject}  = Kernel::System::Group->new(%CommonObject);
-$CommonObject{SLAObject}    = Kernel::System::SLA->new(%CommonObject);
-$CommonObject{ESCLObject}   = Kernel::System::Escalation->new(%CommonObject);
-$CommonObject{EmailObject}  = Kernel::System::Email->new(%CommonObject);
-$CommonObject{UserObject}   = Kernel::System::User->new(%CommonObject);
-
+	my %CommonObject = ();
+		
+	$CommonObject{ConfigObject} = Kernel::Config->new();
+	$CommonObject{EncodeObject} = Kernel::System::Encode->new(%CommonObject);
+	
+	$CommonObject{LogObject}    = Kernel::System::Log->new(
+	LogPrefix => 'OTRS-otrs.EscalationMatrix.pl',
+	%CommonObject,
+	);
+	
+	$CommonObject{MainObject}   = Kernel::System::Main->new(%CommonObject);
+	$CommonObject{TimeObject}   = Kernel::System::Time->new(%CommonObject);
+	$CommonObject{DBObject}     = Kernel::System::DB->new(%CommonObject);
+	$CommonObject{TicketObject} = Kernel::System::Ticket->new(%CommonObject);
+	$CommonObject{QueueObject}  = Kernel::System::Queue->new(%CommonObject);
+	$CommonObject{GroupObject}  = Kernel::System::Group->new(%CommonObject);
+	$CommonObject{SLAObject}    = Kernel::System::SLA->new(%CommonObject);
+	$CommonObject{ESCLObject}   = Kernel::System::Escalation->new(%CommonObject);
+	$CommonObject{EmailObject}  = Kernel::System::Email->new(%CommonObject);
+	$CommonObject{UserObject}   = Kernel::System::User->new(%CommonObject);
 
 =head2 TERMS AND CONDITIONS
 
 This software is part of the OTRS project (L<http://otrs.org/>).
-
 This software comes with ABSOLUTELY NO WARRANTY. For details, see
 the enclosed file COPYING for license information (AGPL). If you
 did not receive this file, see L<http://www.gnu.org/licenses/agpl.txt>.

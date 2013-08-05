@@ -181,6 +181,11 @@ Kernel::System::Escalation - escalation lib
 =head2 VERSION
 
 $Revision: 1.0 $ $Date: 2013/02/04 14:38:57 $
+$VERSION = qw($Revision: 1.0 $) [1];
+
+=head2 Dependencies
+
+No such extra dependency, general OTRS 3.1.x will do.
 
 =head2 DESCRIPTION
 
@@ -236,23 +241,24 @@ create an object
 
 =head1 ESCLGet()
 
-return a sla as hash
+Return a sla as hash
 
-Return
-    $ESCLData{SLAID}{Notify_Type}{Level}{Notify_To}
-    $ESCLData{SLAID}{Notify_Type}{Level}{Notify_Perc}
-    $ESCLData{SLAID}{Notify_Type}{Level}{Valid_ID}
+        Return
+            $ESCLData{SLAID}{Notify_Type}{Level}{Notify_To};
+            $ESCLData{SLAID}{Notify_Type}{Level}{Notify_Perc};
+            $ESCLData{SLAID}{Notify_Type}{Level}{Valid_ID};
+            
 
 
-    my %ESCLData = $SLAObject->ESCLGet(
-        SLAID  => 123,
-        UserID => 1,
-    );
-
+        my %ESCLData = $SLAObject->ESCLGet(
+                SLAID  => 123,
+                UserID => 1,
+            );
+        
 
 =head1 ESCLAdd()
 
-add a escalation
+Add a escalation
 
     my $SLAID = $SLAObject->ESCLAdd(
         SLAID       => 1, ### From [ 1, 2, 3 ] depends on ticket SLAID,
@@ -264,16 +270,12 @@ add a escalation
         
     );
 
-
 =head2 TERMS AND CONDITIONS
 
 This software is part of the OTRS project (L<http://otrs.org/>).
-
 This software comes with ABSOLUTELY NO WARRANTY. For details, see
 the enclosed file COPYING for license information (AGPL). If you
 did not receive this file, see L<http://www.gnu.org/licenses/agpl.txt>.
-
-
 
 
 =cut
